@@ -156,6 +156,10 @@ function checkAndResetAttempts(string $email): void {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
+        session_start();
+        $currentUser = $_SESSION['user'] ?? 'unknown user';
+        $currentTime = gmdate('Y-m-d H:i:s');
+
         if (isset($_POST['action']) && $_POST['action'] === 'reset_password') {
             // Password reset - NO reCAPTCHA needed here
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -235,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     updated_by = ?
                 WHERE email = ?
             ");
-            $stmt->execute([$pin, $expires, $currentTime, $currentTime, 'zip-sapp', $email]);
+            $stmt->execute([$pin, $expires, $currentTime, $currentTime, $currentUser, $email]);
 
             if (!sendResetPin($email, $pin)) {
                 throw new Exception('Failed to send reset PIN.');

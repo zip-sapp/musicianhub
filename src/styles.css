@@ -177,6 +177,9 @@ img {
 
 /* Welcome Badge */
 .welcome-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     background: linear-gradient(135deg, #ff33cc, #ff99cc);
     padding: 10px 20px;
     border-radius: 25px;
@@ -185,9 +188,13 @@ img {
     box-shadow: 0 2px 10px rgba(255, 153, 204, 0.3);
     border: 2px solid rgba(255, 255, 255, 0.2);
     animation: glow 2s ease-in-out infinite;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+}
+
+.welcome-badge img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .welcome-badge i {

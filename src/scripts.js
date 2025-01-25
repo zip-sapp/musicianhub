@@ -530,7 +530,6 @@ $('#forgot-email-form').off('submit').on('submit', async function(e) {
             },
             dataType: 'json',
             success: function(response) {
-                console.log('Success response:', response);
                 if (response.success) {
                     showPopup('success', response.message);
                     $('#forgot-email-form').hide();
@@ -698,6 +697,24 @@ $('#reset-password-form').off('submit').on('submit', function(e) {
             submitButton.prop('disabled', false).text('Reset Password');
         }
     });
+});
+
+function handleAlertAnimations() {
+    const alert = document.querySelector('.alert');
+    if (alert) {
+        setTimeout(function() {
+            alert.style.animation = 'slideOut 0.5s ease-out forwards';
+            setTimeout(function() {
+                alert.remove();
+            }, 500);
+        }, 3000);
+    }
+}
+
+// Initialize everything when document is ready
+$(document).ready(function() {
+    initializeEventHandlers();
+    handleAlertAnimations();
 });
 
 // Handle alert animations

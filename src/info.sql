@@ -1,3 +1,6 @@
+-- Select the database
+USE musician_db;
+
 -- Drop the existing table if you want to start fresh (BE CAREFUL with this in production!)
 -- DROP TABLE IF EXISTS users;
 
@@ -20,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
     reset_pin_expires TIMESTAMP NULL DEFAULT NULL,
     last_pin_request TIMESTAMP NULL DEFAULT NULL,
     reset_attempts INT DEFAULT 0
-);
+    );
 
 -- Add any missing columns if the table already exists
 ALTER TABLE users
@@ -39,6 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_verification_token ON users(verification_token);
 CREATE INDEX IF NOT EXISTS idx_reset_pin ON users(reset_pin);
 
+-- Create the admins table
 CREATE TABLE IF NOT EXISTS admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -48,7 +52,7 @@ CREATE TABLE IF NOT EXISTS admins (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login TIMESTAMP NULL,
     is_online BOOLEAN DEFAULT FALSE
-);
+    );
 
 -- Add online status column to users table if not exists
 ALTER TABLE users
@@ -56,19 +60,20 @@ ALTER TABLE users
     ADD COLUMN IF NOT EXISTS last_login TIMESTAMP NULL,
     ADD COLUMN IF NOT EXISTS user_type ENUM('user', 'admin') DEFAULT 'user';
 
+-- Drop the existing musicians table if you want to start fresh (BE CAREFUL with this in production!)
+DROP TABLE IF EXISTS musicians;
 
-DROP TABLE IF EXISTS `musicians`;
-
-CREATE TABLE `musicians` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `genre` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL,
-  `image_url` varchar(255) DEFAULT NULL,
-  `created_by` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
+-- Create the musicians table
+CREATE TABLE musicians (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    genre VARCHAR(100) NOT NULL,
+    description TEXT DEFAULT NULL,
+    image_url VARCHAR(255) DEFAULT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Add profile_picture column to users table if not exists
 ALTER TABLE users
     ADD COLUMN IF NOT EXISTS profile_picture VARCHAR(255) DEFAULT NULL;
