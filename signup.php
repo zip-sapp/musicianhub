@@ -148,7 +148,7 @@ function sendVerificationEmail(string $email, string $token, string $username): 
         $mail->addAddress($email, $username);
 
         // Create verification link for localhost
-        $verificationLink = "https://localhost/saplala_soler/verify.php?token=" . $token;
+        $verificationLink = "https://localhost/musicianhub/verify.php?token=" . $token;
 
         $mail->isHTML();
         $mail->Subject = 'Verify Your Email - Musician Database';
