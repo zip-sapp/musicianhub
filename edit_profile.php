@@ -1,6 +1,8 @@
 <?php
 global $pdo;
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require_once 'db.php';
 require_once 'signup.php'; // To reuse validation functions
 
@@ -9,6 +11,11 @@ if (!isset($_SESSION['user'])) {
     header('Content-Type: application/json');
     echo json_encode(['success' => false, 'message' => 'Please log in to edit your profile']);
     exit;
+}
+
+error_log("Profile update request received: " . print_r($_POST, true));
+if (!empty($_FILES)) {
+    error_log("Files received: " . print_r($_FILES, true));
 }
 
 $username = $_SESSION['user'];

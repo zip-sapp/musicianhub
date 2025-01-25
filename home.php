@@ -775,39 +775,79 @@ if ($is_authenticated) {
             -webkit-transform-origin: center;
         }
 
-        .profile-picture-small {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 8px;
+        #pin-countdown, #resend-countdown {
+            font-weight: bold;
+            color: #ff33cc;
         }
 
-        .profile-picture-large {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            display: block;
-            border: 3px solid rgba(255, 255, 255, 0.2);
+        /* Profile Modal Specific Styles */
+        #profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        #profile-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         #profile-modal .modal-content {
-            max-width: 500px;
-        }
-
-        .profile-upload-wrapper {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 15px;
             position: relative;
-            width: 150px;
-            margin: 0 auto 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
-        .profile-upload-wrapper:hover .profile-upload-overlay {
-            opacity: 1;
+        #profile-modal .modal-header {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ff99cc;
+            text-align: center;
         }
 
-        .profile-upload-overlay {
+        #profile-modal .profile-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        #profile-modal .profile-section h3 {
+            color: #ff99cc;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        #profile-modal .profile-upload-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+        }
+
+        #profile-modal .profile-picture-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #profile-modal .profile-upload-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -823,30 +863,116 @@ if ($is_authenticated) {
             cursor: pointer;
         }
 
-        .profile-upload-overlay i {
+        #profile-modal .profile-upload-overlay:hover {
+            opacity: 1;
+        }
+
+        #profile-modal .profile-upload-overlay i {
             color: white;
             font-size: 24px;
+        }
+
+        #profile-modal .form-group {
+            margin-bottom: 15px;
+        }
+
+        #profile-modal .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        #profile-modal .form-group input {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        #profile-modal .form-group input:focus {
+            border-color: #ff99cc;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 153, 204, 0.3);
+        }
+
+        #profile-modal .btn-modal {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff33cc, #ff99cc);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        #profile-modal .btn-modal:hover {
+            background: linear-gradient(135deg, #ff66ff, #ffb3d9);
+            transform: translateY(-2px);
+        }
+
+        #profile-modal .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        #profile-modal .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        #profile-modal .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
         }
 
         #profile-picture-input {
             display: none;
         }
 
-        .profile-section {
-            margin-bottom: 30px;
-            padding: 20px;
+        /* Scrollbar Styling */
+        #profile-modal .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #profile-modal .modal-content::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 4px;
         }
 
-        .profile-section h3 {
-            color: #ff99cc;
-            margin-bottom: 15px;
+        #profile-modal .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
         }
 
-        #pin-countdown, #resend-countdown {
-            font-weight: bold;
-            color: #ff33cc;
+        #profile-modal .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         @keyframes pulse {
@@ -1107,6 +1233,8 @@ if ($is_authenticated) {
         <div class="modal-header">Edit Profile</div>
 
         <form id="profile-form" enctype="multipart/form-data">
+            <div class="error-message" style="display: none;"></div>
+
             <!-- Profile Picture Section -->
             <div class="profile-section">
                 <h3>Profile Picture</h3>
@@ -1340,15 +1468,62 @@ if ($is_authenticated) {
     }
 
     function showFormError(formId, message) {
-        console.log('Showing error:', message);
+        console.log('Form error:', message); // Debug log
         const errorElement = $(`#${formId} .error-message`);
-        errorElement.text(message).slideDown();
+        if (!errorElement.length) {
+            // If error element doesn't exist, create it
+            $(`#${formId}`).prepend(`<div class="error-message"></div>`);
+        }
+        errorElement.text(message)
+            .slideDown()
+            .css({
+                'background': 'rgba(255, 68, 68, 0.1)',
+                'border': '1px solid rgba(255, 68, 68, 0.3)',
+                'color': '#ff4444',
+                'padding': '10px',
+                'border-radius': '8px',
+                'margin-bottom': '15px',
+                'font-size': '0.9rem'
+            });
 
-        // Auto-hide error message after 3 seconds
+        // Auto-hide after 3 seconds
         setTimeout(() => {
             errorElement.slideUp();
         }, 3000);
     }
+
+    $('#profile-picture-input').on('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            console.log('Selected file:', file); // Debug log
+
+            // Validate file size
+            if (file.size > 500 * 1024) {
+                showFormError('profile-form', 'Profile picture must be less than 500KB');
+                this.value = '';
+                return;
+            }
+
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                showFormError('profile-form', 'Only JPG, PNG and GIF files are allowed');
+                this.value = '';
+                return;
+            }
+
+            // Preview image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#current-profile-picture').attr('src', e.target.result);
+            };
+            reader.onerror = function(e) {
+                console.error('FileReader error:', e);
+                showFormError('profile-form', 'Error reading file');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
     function showPopup(type, message) {
         // Remove any existing popups
@@ -1406,9 +1581,15 @@ if ($is_authenticated) {
 
     $('#profile-form').on('submit', function(e) {
         e.preventDefault();
+        console.log('Profile form submitted'); // Debug log
 
         const formData = new FormData(this);
         const submitButton = $(this).find('button[type="submit"]');
+
+        // Debug log for form data
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
 
         submitButton.prop('disabled', true).text('Saving...');
 
@@ -1419,17 +1600,23 @@ if ($is_authenticated) {
             processData: false,
             contentType: false,
             success: function(response) {
+                console.log('Server response:', response); // Debug log
                 if (response.success) {
                     showPopup('success', response.message);
                     setTimeout(() => {
                         closeProfileModal();
-                        window.location.reload(); // Reload to show updated profile picture
+                        window.location.reload();
                     }, 2000);
                 } else {
-                    showFormError('profile-form', response.message);
+                    showFormError('profile-form', response.message || 'Failed to update profile');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('Ajax error:', {
+                    status: status,
+                    error: error,
+                    response: xhr.responseText
+                });
                 showFormError('profile-form', 'An error occurred while updating your profile');
             },
             complete: function() {
