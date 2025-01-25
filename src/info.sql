@@ -69,3 +69,6 @@ CREATE TABLE `musicians` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS profile_picture VARCHAR(255) DEFAULT NULL;

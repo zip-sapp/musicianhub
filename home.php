@@ -775,6 +775,75 @@ if ($is_authenticated) {
             -webkit-transform-origin: center;
         }
 
+        .profile-picture-small {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+        }
+
+        .profile-picture-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #profile-modal .modal-content {
+            max-width: 500px;
+        }
+
+        .profile-upload-wrapper {
+            position: relative;
+            width: 150px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-upload-wrapper:hover .profile-upload-overlay {
+            opacity: 1;
+        }
+
+        .profile-upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .profile-upload-overlay i {
+            color: white;
+            font-size: 24px;
+        }
+
+        #profile-picture-input {
+            display: none;
+        }
+
+        .profile-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .profile-section h3 {
+            color: #ff99cc;
+            margin-bottom: 15px;
+        }
+
         #pin-countdown, #resend-countdown {
             font-weight: bold;
             color: #ff33cc;
@@ -824,10 +893,25 @@ if ($is_authenticated) {
     <div class="nav-links">
         <?php if (isset($_SESSION['user'])): ?>
             <span class="welcome-badge">
+        <?php
+        $stmt = $pdo->prepare("SELECT profile_picture FROM users WHERE username = ?");
+        $stmt->execute([$_SESSION['user']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && $user['profile_picture']): ?>
+            <img src="<?= htmlspecialchars($user['profile_picture']) ?>"
+                 alt="Profile"
+                 class="profile-picture-small">
+        <?php else: ?>
             <i class="fas fa-user-circle"></i>
-            <?= htmlspecialchars($_SESSION['user']); ?>
-        </span>
-            <a href="logout.php" class="btn" title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+        <?php endif; ?>
+                <?= htmlspecialchars($_SESSION['user']); ?>
+    </span>
+            <a href="#" class="btn" title="Edit Profile" onclick="openProfileModal()">
+                <i class="fas fa-user-edit"></i>
+            </a>
+            <a href="logout.php" class="btn" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
         <?php else: ?>
             <a href="#" class="btn" title="Home"><i class="fas fa-home"></i></a>
             <a href="#" class="btn" title="Login" onclick="openModal('login')"><i class="fas fa-sign-in-alt"></i></a>
@@ -1013,6 +1097,56 @@ if ($is_authenticated) {
                 Already have an account? <a href="#" onclick="openModal('login'); return false;">Login</a>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+        <div class="modal-header">Edit Profile</div>
+
+        <form id="profile-form" enctype="multipart/form-data">
+            <!-- Profile Picture Section -->
+            <div class="profile-section">
+                <h3>Profile Picture</h3>
+                <div class="profile-upload-wrapper">
+                    <img src="" alt="Profile" class="profile-picture-large" id="current-profile-picture">
+                    <div class="profile-upload-overlay" onclick="document.getElementById('profile-picture-input').click()">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <input type="file" id="profile-picture-input" name="profile_picture" accept="image/*">
+                </div>
+            </div>
+
+            <!-- Account Information Section -->
+            <div class="profile-section">
+                <h3>Account Information</h3>
+                <div class="form-group username">
+                    <label for="new-username">Username</label>
+                    <input type="text" id="new-username" name="new_username" placeholder="Enter new username">
+                </div>
+                <div class="form-group phone">
+                    <label for="new-phone">Phone Number</label>
+                    <input type="tel" id="new-phone" name="new_phone" placeholder="Enter new phone number">
+                </div>
+            </div>
+
+            <!-- Change Password Section -->
+            <div class="profile-section">
+                <h3>Change Password</h3>
+                <div class="form-group password">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" name="current_password" placeholder="Enter current password">
+                </div>
+                <div class="form-group password">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" name="new_password" placeholder="Enter new password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-modal">Save Changes</button>
+        </form>
     </div>
 </div>
 
@@ -1230,6 +1364,133 @@ if ($is_authenticated) {
             popup.fadeOut(500, () => popup.remove());
         }, 3000);
     }
+
+    function openProfileModal() {
+        const modal = document.getElementById('profile-modal');
+        modal.classList.add('active');
+
+        // Load current user data
+        $.ajax({
+            url: 'edit_profile.php',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    const userData = response.data;
+                    $('#new-username').val(userData.username);
+                    $('#new-phone').val(userData.phone);
+
+                    // Set profile picture
+                    const profilePic = document.getElementById('current-profile-picture');
+                    profilePic.src = userData.profile_picture || 'https://via.placeholder.com/150';
+                }
+            }
+        });
+    }
+
+    function closeProfileModal() {
+        const modal = document.getElementById('profile-modal');
+        modal.classList.remove('active');
+        $('#profile-form')[0].reset();
+    }
+
+    // Handle profile picture preview
+    document.getElementById('profile-picture-input').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('current-profile-picture').src = e.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    $('#profile-form').on('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const submitButton = $(this).find('button[type="submit"]');
+
+        submitButton.prop('disabled', true).text('Saving...');
+
+        $.ajax({
+            url: 'edit_profile.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    showPopup('success', response.message);
+                    setTimeout(() => {
+                        closeProfileModal();
+                        window.location.reload(); // Reload to show updated profile picture
+                    }, 2000);
+                } else {
+                    showFormError('profile-form', response.message);
+                }
+            },
+            error: function() {
+                showFormError('profile-form', 'An error occurred while updating your profile');
+            },
+            complete: function() {
+                submitButton.prop('disabled', false).text('Save Changes');
+            }
+        });
+    });
+
+    // Add validation for profile picture size before upload
+    document.getElementById('profile-picture-input').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file size (500KB = 500 * 1024 bytes)
+            if (file.size > 500 * 1024) {
+                showFormError('profile-form', 'Profile picture must be less than 500KB');
+                this.value = ''; // Clear the file input
+                return;
+            }
+
+            // Check file type
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                showFormError('profile-form', 'Only JPG, PNG and GIF files are allowed');
+                this.value = '';
+                return;
+            }
+
+            // Preview the image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('current-profile-picture').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Add password validation as user types
+    $('#new-password').on('input', function() {
+        const password = $(this).val();
+        let errorMessage = '';
+
+        if (password.length > 0) {
+            if (password.length < 8) {
+                errorMessage = 'Password must be at least 8 characters long';
+            } else if (!/[A-Z]/.test(password)) {
+                errorMessage = 'Password must contain at least one uppercase letter';
+            } else if (!/[a-z]/.test(password)) {
+                errorMessage = 'Password must contain at least one lowercase letter';
+            } else if (!/[0-9]/.test(password)) {
+                errorMessage = 'Password must contain at least one number';
+            } else if (!/[!@#$%^&*()\-_=+{};:,<.>]/.test(password)) {
+                errorMessage = 'Password must contain at least one special character';
+            }
+        }
+
+        if (errorMessage) {
+            showFormError('profile-form', errorMessage);
+        } else {
+            $('.error-message').hide();
+        }
+    });
 
     // Main initialization function
     function initializeEventHandlers() {

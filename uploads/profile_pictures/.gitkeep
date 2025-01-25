@@ -1,0 +1,7 @@
+<?php
+$testDir = 'uploads/profile_pictures';
+if (is_writable($testDir)) {
+    echo "Directory is writable";
+} else {
+    echo "Directory is not writable";
+}s
