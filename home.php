@@ -484,6 +484,56 @@ if ($is_authenticated) {
             gap: 8px;
         }
 
+        .btn-upload {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-upload:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            color: #ff99cc;
+        }
+
+        .btn-change-password {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-change-password:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         @keyframes glow {
             0% { box-shadow: 0 2px 10px rgba(255, 153, 204, 0.3); }
             50% { box-shadow: 0 2px 20px rgba(255, 153, 204, 0.5); }
@@ -971,8 +1021,18 @@ if ($is_authenticated) {
             border-radius: 4px;
         }
 
-        #profile-modal .modal-content::-webkit-scrollbar-thumb:hover {
+        #profile-modal .modal-content::-webkit-scrollbar-thumb:hover f{
             background: rgba(255, 255, 255, 0.3);
+        }
+
+        .default-profile-icon {
+            font-size: 48px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+        }
+
+        .profile-upload-wrapper {
+            text-align: center;
         }
 
         @keyframes pulse {
@@ -1239,10 +1299,18 @@ if ($is_authenticated) {
             <div class="profile-section">
                 <h3>Profile Picture</h3>
                 <div class="profile-upload-wrapper">
-                    <img src="" alt="Profile" class="profile-picture-large" id="current-profile-picture">
-                    <div class="profile-upload-overlay" onclick="document.getElementById('profile-picture-input').click()">
-                        <i class="fas fa-camera"></i>
-                    </div>
+                    <?php if ($user && $user['profile_picture']): ?>
+                        <img src="<?= htmlspecialchars($user['profile_picture']) ?>"
+                             alt="Profile"
+                             class="profile-picture-large"
+                             id="current-profile-picture">
+                    <?php else: ?>
+                        <i class="fas fa-user-circle default-profile-icon"></i>
+                        <img src="" alt="Profile" class="profile-picture-large" id="current-profile-picture" style="display: none;">
+                    <?php endif; ?>
+                    <button type="button" class="btn-upload" onclick="document.getElementById('profile-picture-input').click()">
+                        <i class="fas fa-camera"></i> Change Photo
+                    </button>
                     <input type="file" id="profile-picture-input" name="profile_picture" accept="image/*">
                 </div>
             </div>
@@ -1252,24 +1320,39 @@ if ($is_authenticated) {
                 <h3>Account Information</h3>
                 <div class="form-group username">
                     <label for="new-username">Username</label>
-                    <input type="text" id="new-username" name="new_username" placeholder="Enter new username">
+                    <div class="input-group">
+                        <input type="text" id="new-username" name="new_username" placeholder="Keep current username" disabled>
+                        <button type="button" class="btn-edit" onclick="toggleEdit('new-username')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="form-group phone">
                     <label for="new-phone">Phone Number</label>
-                    <input type="tel" id="new-phone" name="new_phone" placeholder="Enter new phone number">
+                    <div class="input-group">
+                        <input type="tel" id="new-phone" name="new_phone" placeholder="Keep current phone number" disabled>
+                        <button type="button" class="btn-edit" onclick="toggleEdit('new-phone')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             <!-- Change Password Section -->
             <div class="profile-section">
                 <h3>Change Password</h3>
-                <div class="form-group password">
-                    <label for="current-password">Current Password</label>
-                    <input type="password" id="current-password" name="current_password" placeholder="Enter current password">
-                </div>
-                <div class="form-group password">
-                    <label for="new-password">New Password</label>
-                    <input type="password" id="new-password" name="new_password" placeholder="Enter new password">
+                <button type="button" class="btn-change-password" onclick="togglePasswordFields()">
+                    Change Password
+                </button>
+                <div id="password-fields" style="display: none;">
+                    <div class="form-group password">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="current_password" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group password">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="new_password" placeholder="Enter new password">
+                    </div>
                 </div>
             </div>
 
@@ -1525,6 +1608,34 @@ if ($is_authenticated) {
         }
     });
 
+    function toggleEdit(fieldId) {
+        const input = document.getElementById(fieldId);
+        input.disabled = !input.disabled;
+        if (!input.disabled) {
+            input.focus();
+            input.placeholder = `Enter new ${fieldId.replace('new-', '')}`;
+        } else {
+            input.placeholder = `Keep current ${fieldId.replace('new-', '')}`;
+            input.value = ''; // Clear the value if disabled
+        }
+    }
+
+    function togglePasswordFields() {
+        const passwordFields = document.getElementById('password-fields');
+        const button = document.querySelector('.btn-change-password');
+
+        if (passwordFields["style"].display === 'none') {
+            passwordFields["style"].display = 'block';
+            button.textContent = 'Cancel Password Change';
+        } else {
+            passwordFields["style"].display = 'none';
+            button.textContent = 'Change Password';
+            // Clear password fields
+            document.getElementById('current-password').value = '';
+            document.getElementById('new-password').value = '';
+        }
+    }
+
     function showPopup(type, message) {
         // Remove any existing popups
         $('.popup').remove();
@@ -1581,14 +1692,22 @@ if ($is_authenticated) {
 
     $('#profile-form').on('submit', function(e) {
         e.preventDefault();
-        console.log('Profile form submitted'); // Debug log
 
         const formData = new FormData(this);
         const submitButton = $(this).find('button[type="submit"]');
 
-        // Debug log for form data
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
+        // Remove disabled fields from formData if they haven't been enabled for editing
+        ['new-username', 'new-phone'].forEach(fieldId => {
+            const input = document.getElementById(fieldId);
+            if (input["disabled"]) {
+                formData.delete(input["name"]);
+            }
+        });
+
+        // Remove password fields if they're not being changed
+        if (document.getElementById('password-fields')["style"].display === 'none') {
+            formData.delete('current_password');
+            formData.delete('new_password');
         }
 
         submitButton.prop('disabled', true).text('Saving...');
@@ -1600,7 +1719,6 @@ if ($is_authenticated) {
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log('Server response:', response); // Debug log
                 if (response.success) {
                     showPopup('success', response.message);
                     setTimeout(() => {
@@ -1608,15 +1726,11 @@ if ($is_authenticated) {
                         window.location.reload();
                     }, 2000);
                 } else {
-                    showFormError('profile-form', response.message || 'Failed to update profile');
+                    showFormError('profile-form', response.message);
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Ajax error:', {
-                    status: status,
-                    error: error,
-                    response: xhr.responseText
-                });
+                console.error('Ajax error:', {xhr, status, error});
                 showFormError('profile-form', 'An error occurred while updating your profile');
             },
             complete: function() {

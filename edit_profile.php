@@ -167,18 +167,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!empty($updateFields)) {
-            // Add metadata
+            // Only update fields that have been changed
+            $fieldCount = count($updateFields);
+            if ($fieldCount === 0) {
+                throw new Exception('No changes were made');
+            }
+
+            // Add metadata only if there are actual changes
             $updateFields[] = 'updated_at = ?';
             $updateValues[] = gmdate('Y-m-d H:i:s');
             $updateFields[] = 'updated_by = ?';
             $updateValues[] = $username;
 
-            // Build and execute update query
             $sql = "UPDATE users SET " . implode(', ', $updateFields) . " WHERE username = ?";
             $updateValues[] = $username;
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute($updateValues);
+        } else {
+            // If no profile picture and no other changes, inform the user
+            if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] === UPLOAD_ERR_NO_FILE) {
+                throw new Exception('No changes were made');
+            }
         }
 
         $pdo->commit();
