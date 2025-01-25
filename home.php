@@ -1032,8 +1032,12 @@ if ($is_authenticated) {
         }
 
         .profile-upload-wrapper {
+            position: relative;
+            width: 120px;
+            margin: 0 auto;
             text-align: center;
         }
+
 
         @keyframes pulse {
             0% { opacity: 1; }
@@ -1073,6 +1077,40 @@ if ($is_authenticated) {
 
         #profile-modal .form-group::before {
             display: none; /* Remove the default icons */
+        }
+
+        .profile-picture-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .btn-upload {
+            position: relative;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            z-index: 1;
+        }
+
+        .default-profile-icon {
+            width: 120px;
+            height: 120px;
+            font-size: 64px;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
         }
 
         @keyframes slideIn {
@@ -1334,13 +1372,19 @@ if ($is_authenticated) {
                              class="profile-picture-large"
                              id="current-profile-picture">
                     <?php else: ?>
-                        <i class="fas fa-user-circle default-profile-icon"></i>
-                        <img src="" alt="Profile" class="profile-picture-large" id="current-profile-picture" style="display: none;">
+                        <div class="default-profile-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <img src=""
+                             alt="Profile"
+                             class="profile-picture-large"
+                             id="current-profile-picture"
+                             style="display: none;">
                     <?php endif; ?>
                     <button type="button" class="btn-upload" onclick="document.getElementById('profile-picture-input').click()">
                         <i class="fas fa-camera"></i> Change Photo
                     </button>
-                    <input type="file" id="profile-picture-input" name="profile_picture" accept="image/*">
+                    <input type="file" id="profile-picture-input" name="profile_picture" accept="image/*" style="display: none;">
                 </div>
             </div>
 
@@ -1714,24 +1758,34 @@ if ($is_authenticated) {
         const submitButton = $(this).find('button[type="submit"]');
         let hasChanges = false;
 
-        // Check if any changes were made
-        if (formData.get('profile_picture') && formData.get('profile_picture').size > 0) {
+        // Check for profile picture changes
+        const profilePicture = document.getElementById('profile-picture-input').files[0];
+        if (profilePicture) {
             hasChanges = true;
         }
 
-        ['new-username', 'new-phone'].forEach(fieldId => {
-            const input = document.getElementById(fieldId);
-            if (!input.disabled && input.value.trim() !== '') {
-                hasChanges = true;
-            } else {
-                formData.delete(input.name);
-            }
-        });
+        // Check for username changes
+        const usernameInput = document.getElementById('new-username');
+        if (!usernameInput.disabled && usernameInput.value.trim()) {
+            hasChanges = true;
+        } else {
+            formData.delete('new_username');
+        }
 
+        // Check for phone number changes
+        const phoneInput = document.getElementById('new-phone');
+        if (!phoneInput.disabled && phoneInput.value.trim()) {
+            hasChanges = true;
+        } else {
+            formData.delete('new_phone');
+        }
+
+        // Check for password changes
         const passwordFields = document.getElementById('password-fields');
         if (passwordFields.style.display !== 'none') {
             const currentPassword = document.getElementById('current-password').value;
             const newPassword = document.getElementById('new-password').value;
+
             if (currentPassword || newPassword) {
                 if (!currentPassword) {
                     showFormError('profile-form', 'Current password is required to change password');
@@ -1751,6 +1805,7 @@ if ($is_authenticated) {
             formData.delete('new_password');
         }
 
+        // Only proceed if there are actual changes
         if (!hasChanges) {
             showFormError('profile-form', 'No changes were made');
             return;
@@ -1765,6 +1820,7 @@ if ($is_authenticated) {
             processData: false,
             contentType: false,
             success: function(response) {
+                console.log('Server response:', response); // Debug log
                 if (response.success) {
                     showPopup('success', response.message);
                     setTimeout(() => {
@@ -1789,7 +1845,7 @@ if ($is_authenticated) {
     document.getElementById('profile-picture-input').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
-            // Check file size and type
+            // File validation
             if (file.size > 500 * 1024) {
                 showFormError('profile-form', 'Profile picture must be less than 500KB');
                 this.value = '';
@@ -1809,10 +1865,10 @@ if ($is_authenticated) {
             const defaultIcon = document.querySelector('.default-profile-icon');
 
             reader.onload = function(e) {
-                if (defaultIcon) defaultIcon.style.display = 'none';
-                if (!profilePic.style.display || profilePic.style.display === 'none') {
-                    profilePic.style.display = 'block';
+                if (defaultIcon) {
+                    defaultIcon.style.display = 'none';
                 }
+                profilePic.style.display = 'block';
                 profilePic.src = e.target.result;
             };
             reader.readAsDataURL(file);
