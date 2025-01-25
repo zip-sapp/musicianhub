@@ -1046,6 +1046,35 @@ if ($is_authenticated) {
             color: #ff3366;
         }
 
+        #profile-modal .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #profile-modal .input-group input {
+            padding-right: 40px; /* Space for the edit button */
+        }
+
+        #profile-modal .btn-edit {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        #profile-modal .btn-edit:hover {
+            color: #ff99cc;
+        }
+
+        #profile-modal .form-group::before {
+            display: none; /* Remove the default icons */
+        }
+
         @keyframes slideIn {
             from {
                 transform: translate(-50%, -100%);
@@ -1608,18 +1637,6 @@ if ($is_authenticated) {
         }
     });
 
-    function toggleEdit(fieldId) {
-        const input = document.getElementById(fieldId);
-        input.disabled = !input.disabled;
-        if (!input.disabled) {
-            input.focus();
-            input.placeholder = `Enter new ${fieldId.replace('new-', '')}`;
-        } else {
-            input.placeholder = `Keep current ${fieldId.replace('new-', '')}`;
-            input.value = ''; // Clear the value if disabled
-        }
-    }
-
     function togglePasswordFields() {
         const passwordFields = document.getElementById('password-fields');
         const button = document.querySelector('.btn-change-password');
@@ -1695,19 +1712,48 @@ if ($is_authenticated) {
 
         const formData = new FormData(this);
         const submitButton = $(this).find('button[type="submit"]');
+        let hasChanges = false;
 
-        // Remove disabled fields from formData if they haven't been enabled for editing
+        // Check if any changes were made
+        if (formData.get('profile_picture') && formData.get('profile_picture').size > 0) {
+            hasChanges = true;
+        }
+
         ['new-username', 'new-phone'].forEach(fieldId => {
             const input = document.getElementById(fieldId);
-            if (input["disabled"]) {
-                formData.delete(input["name"]);
+            if (!input.disabled && input.value.trim() !== '') {
+                hasChanges = true;
+            } else {
+                formData.delete(input.name);
             }
         });
 
-        // Remove password fields if they're not being changed
-        if (document.getElementById('password-fields')["style"].display === 'none') {
+        const passwordFields = document.getElementById('password-fields');
+        if (passwordFields.style.display !== 'none') {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            if (currentPassword || newPassword) {
+                if (!currentPassword) {
+                    showFormError('profile-form', 'Current password is required to change password');
+                    return;
+                }
+                if (!newPassword) {
+                    showFormError('profile-form', 'New password is required');
+                    return;
+                }
+                hasChanges = true;
+            } else {
+                formData.delete('current_password');
+                formData.delete('new_password');
+            }
+        } else {
             formData.delete('current_password');
             formData.delete('new_password');
+        }
+
+        if (!hasChanges) {
+            showFormError('profile-form', 'No changes were made');
+            return;
         }
 
         submitButton.prop('disabled', true).text('Saving...');
@@ -1726,7 +1772,7 @@ if ($is_authenticated) {
                         window.location.reload();
                     }, 2000);
                 } else {
-                    showFormError('profile-form', response.message);
+                    showFormError('profile-form', response.message || 'Failed to update profile');
                 }
             },
             error: function(xhr, status, error) {
@@ -1743,14 +1789,13 @@ if ($is_authenticated) {
     document.getElementById('profile-picture-input').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
-            // Check file size (500KB = 500 * 1024 bytes)
+            // Check file size and type
             if (file.size > 500 * 1024) {
                 showFormError('profile-form', 'Profile picture must be less than 500KB');
-                this.value = ''; // Clear the file input
+                this.value = '';
                 return;
             }
 
-            // Check file type
             const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
             if (!allowedTypes.includes(file.type)) {
                 showFormError('profile-form', 'Only JPG, PNG and GIF files are allowed');
@@ -1758,11 +1803,18 @@ if ($is_authenticated) {
                 return;
             }
 
-            // Preview the image
+            // Show preview
             const reader = new FileReader();
+            const profilePic = document.getElementById('current-profile-picture');
+            const defaultIcon = document.querySelector('.default-profile-icon');
+
             reader.onload = function(e) {
-                document.getElementById('current-profile-picture').src = e.target.result;
-            }
+                if (defaultIcon) defaultIcon.style.display = 'none';
+                if (!profilePic.style.display || profilePic.style.display === 'none') {
+                    profilePic.style.display = 'block';
+                }
+                profilePic.src = e.target.result;
+            };
             reader.readAsDataURL(file);
         }
     });
