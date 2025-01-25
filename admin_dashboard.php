@@ -696,7 +696,7 @@ function handleDatabaseError($e, $context = '') {
 
         const form = e.target;
         const formData = new FormData(form);
-        const musicianId = document.getElementById('musicianId').value;
+        const musicianId = document.getElementById('musicianId')["value"];
         formData.append('action', musicianId ? 'updateMusician' : 'createMusician');
 
         $.ajax({
@@ -771,7 +771,7 @@ function handleDatabaseError($e, $context = '') {
                 e.stopPropagation();
 
                 const formData = new FormData(this);
-                const userId = document.getElementById('userId').value;
+                const userId = document.getElementById('userId')["value"];
                 formData.append('action', userId ? 'updateUser' : 'createUser');
 
                 submitFormData(formData, 'userModal');
@@ -787,7 +787,7 @@ function handleDatabaseError($e, $context = '') {
                 e.stopPropagation();
 
                 const formData = new FormData(this);
-                const musicianId = document.getElementById('musicianId').value;
+                const musicianId = document.getElementById('musicianId')["value"];
                 formData.append('action', musicianId ? 'updateMusician' : 'createMusician');
 
                 submitFormData(formData, 'musicianModal');
@@ -844,49 +844,39 @@ function handleDatabaseError($e, $context = '') {
         // Hide all modals first
         Object.values(modalMap).forEach(modal => {
             if (modal) {
-                modal.style.display = 'none';
+                modal["style"].display = 'none';
                 modal.classList.remove('show');
             }
         });
 
         try {
             let activeModal;
-            switch(type) {
-                case 'createUser':
-                case 'editUser':
-                    activeModal = modalMap.userModal;
-                    document.getElementById('userModalTitle').textContent =
-                        type === 'createUser' ? 'Add New User' : 'Edit User';
-                    if (type === 'createUser') {
-                        document.getElementById('userForm').reset();
-                        document.getElementById('userId').value = '';
-                    } else if (data) {
-                        populateUserForm(data);
-                    }
-                    break;
-
-                case 'deleteUser':
-                    activeModal = modalMap.deleteUserModal;
-                    document.getElementById('deleteUserId').value = data;
-                    break;
-
-                case 'createMusician':
-                case 'editMusician':
-                    activeModal = modalMap.musicianModal;
-                    document.getElementById('musicianModalTitle').textContent =
-                        type === 'createMusician' ? 'Add New Musician' : 'Edit Musician';
-                    if (type === 'createMusician') {
-                        document.getElementById('musicianForm').reset();
-                        document.getElementById('musicianId').value = '';
-                    } else if (data) {
-                        populateMusicianForm(data);
-                    }
-                    break;
-
-                case 'deleteMusician':
-                    activeModal = modalMap.deleteMusicianModal;
-                    document.getElementById('deleteMusicianId').value = data;
-                    break;
+            if (type === 'createUser' || type === 'editUser') {
+                activeModal = modalMap.userModal;
+                document.getElementById('userModalTitle').textContent =
+                    type === 'createUser' ? 'Add New User' : 'Edit User';
+                if (type === 'createUser') {
+                    document.getElementById('userForm').reset();
+                    document.getElementById('userId').value = '';
+                } else if (data) {
+                    populateUserForm(data);
+                }
+            } else if (type === 'deleteUser') {
+                activeModal = modalMap.deleteUserModal;
+                document.getElementById('deleteUserId').value = data;
+            } else if (type === 'createMusician' || type === 'editMusician') {
+                activeModal = modalMap.musicianModal;
+                document.getElementById('musicianModalTitle').textContent =
+                    type === 'createMusician' ? 'Add New Musician' : 'Edit Musician';
+                if (type === 'createMusician') {
+                    document.getElementById('musicianForm').reset();
+                    document.getElementById('musicianId').value = '';
+                } else if (data) {
+                    populateMusicianForm(data);
+                }
+            } else if (type === 'deleteMusician') {
+                activeModal = modalMap.deleteMusicianModal;
+                document.getElementById('deleteMusicianId').value = data;
             }
 
             if (activeModal) {
@@ -901,7 +891,7 @@ function handleDatabaseError($e, $context = '') {
     }
 
     function deleteUser() {
-        const userId = document.getElementById('deleteUserId').value;
+        const userId = document.getElementById('deleteUserId')["value"];
         if (!userId) {
             showPopup('error', 'Invalid user ID');
             return;
@@ -934,7 +924,7 @@ function handleDatabaseError($e, $context = '') {
     }
 
     function deleteMusician() {
-        const musicianId = document.getElementById('deleteMusicianId').value;
+        const musicianId = document.getElementById('deleteMusicianId')["value"];
         if (!musicianId) {
             showPopup('error', 'Invalid musician ID');
             return;
@@ -970,7 +960,7 @@ function handleDatabaseError($e, $context = '') {
         const modal = document.getElementById(modalId);
         if (modal) {
             modal.classList.remove('show');
-            setTimeout(() => modal.style.display = 'none', 300);
+            setTimeout(() => modal["style"].display = 'none', 300);
         }
     }
 
