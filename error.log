@@ -1,0 +1,72 @@
+[17-Jan-2025 17:31:09 Europe/Berlin] Password reset error: Please wait before requesting a new PIN or too many attempts.
+[18-Jan-2025 04:00:42 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:00:50 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:00:51 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:00:52 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:00:55 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:00:56 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:00:59 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:00:59 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:00 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:01 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:01 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:03 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:03 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:04 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:04 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:04 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:04 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:05 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:05 Europe/Berlin] Password reset error: Invalid or expired PIN.
+[18-Jan-2025 04:01:17 Europe/Berlin] Password reset error: Please wait 60 seconds before requesting a new PIN.
+[18-Jan-2025 04:01:20 Europe/Berlin] Password reset error: Please wait 60 seconds before requesting a new PIN.
+[18-Jan-2025 04:01:20 Europe/Berlin] Password reset error: Please wait 60 seconds before requesting a new PIN.
+[18-Jan-2025 04:01:25 Europe/Berlin] Password reset error: Please wait 60 seconds before requesting a new PIN.
+[18-Jan-2025 04:12:20 Europe/Berlin] Password reset error: Too many attempts. Please try again later.
+[25-Jan-2025 02:50:34 Europe/Berlin] Password reset error: Too many attempts. Please try again later.
+[25-Jan-2025 02:50:38 Europe/Berlin] Password reset error: Too many attempts. Please try again later.
+[25-Jan-2025 02:50:39 Europe/Berlin] Password reset error: Too many attempts. Please try again later.
+[25-Jan-2025 02:50:42 Europe/Berlin] Password reset error: Too many attempts. Please try again later.
+[25-Jan-2025 02:51:48 Europe/Berlin] Password reset error: Too many attempts. Please try again later.
+[25-Jan-2025 03:13:05 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:06 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:06 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:07 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:07 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:07 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:17 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:32 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:33 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:35 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:13:36 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:26:54 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:26:59 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:27:24 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in D:\xampp\htdocs\saplala_soler\forgot_password.php:277
+Stack trace:
+#0 D:\xampp\htdocs\saplala_soler\forgot_password.php(277): PDOStatement->execute(Array)
+#1 {main}
+  thrown in D:\xampp\htdocs\saplala_soler\forgot_password.php on line 277
+[25-Jan-2025 03:27:27 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in D:\xampp\htdocs\saplala_soler\forgot_password.php:277
+Stack trace:
+#0 D:\xampp\htdocs\saplala_soler\forgot_password.php(277): PDOStatement->execute(Array)
+#1 {main}
+  thrown in D:\xampp\htdocs\saplala_soler\forgot_password.php on line 277
+[25-Jan-2025 03:27:29 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in D:\xampp\htdocs\saplala_soler\forgot_password.php:277
+Stack trace:
+#0 D:\xampp\htdocs\saplala_soler\forgot_password.php(277): PDOStatement->execute(Array)
+#1 {main}
+  thrown in D:\xampp\htdocs\saplala_soler\forgot_password.php on line 277
+[25-Jan-2025 03:27:48 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in D:\xampp\htdocs\saplala_soler\forgot_password.php:277
+Stack trace:
+#0 D:\xampp\htdocs\saplala_soler\forgot_password.php(277): PDOStatement->execute(Array)
+#1 {main}
+  thrown in D:\xampp\htdocs\saplala_soler\forgot_password.php on line 277
+[25-Jan-2025 03:28:18 Europe/Berlin] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens in D:\xampp\htdocs\saplala_soler\forgot_password.php:277
+Stack trace:
+#0 D:\xampp\htdocs\saplala_soler\forgot_password.php(277): PDOStatement->execute(Array)
+#1 {main}
+  thrown in D:\xampp\htdocs\saplala_soler\forgot_password.php on line 277
+[25-Jan-2025 03:29:26 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:29:29 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:29:35 Europe/Berlin] Password reset error: Passwords do not match.
+[25-Jan-2025 03:29:41 Europe/Berlin] Password reset error: Passwords do not match.
