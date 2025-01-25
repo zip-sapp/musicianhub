@@ -18,7 +18,7 @@ ini_set('log_errors', 1);
 ini_set('error_log', 'error.log');
 
 function verifyRecaptcha($recaptchaResponse) {
-    $secretKey = "6Lcbf7oqAAAAAADjOTH-D2gaH3DX5LjEKp2Nm019";
+    $secretKey = "your-secret-key";
     $url = "https://www.google.com/recaptcha/api/siteverify";
     $data = [
         'secret' => $secretKey,
@@ -257,6 +257,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'message' => "Reset PIN has been sent to your email. You have $remainingAttempts attempts remaining.",
                 'remainingAttempts' => $remainingAttempts
             ]);
+            exit;
 
         } elseif (isset($_POST['resend'])) {
             $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -308,6 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'success' => true,
                 'message' => 'A new PIN has been sent to your email address. Please check your inbox.'
             ]);
+            exit;
 
         } elseif (isset($_POST['pin'])) {
             $pin = $_POST['pin'];
@@ -337,6 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'success' => true,
                 'message' => 'PIN verified successfully.'
             ]);
+            exit;
         }
     } catch (Exception $e) {
         error_log("Password reset error: " . $e->getMessage());
